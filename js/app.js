@@ -17,8 +17,10 @@
  * Define Global Variables
  * 
 */
+// global variable to stor sections data
 const sections = document.querySelectorAll('section');
-const navigation = document.getElementById('navbar__list');
+// global variable to store navigation bar data
+const navbar = document.getElementById('navbar__list');
 
 /**
  * End Global Variables
@@ -35,24 +37,67 @@ const navigation = document.getElementById('navbar__list');
 */
 
 // build the nav
-const navBar = () => {
 
-    let navList = '';
+// function that build navigation bar list items
+const createNavItems = () => {
+	// loop over each section to get needed informations
+	sections.forEach(section => {
+		//getting and store the section name
+		let dataNav = section.getAttribute('data-nav');
+		// create link to store section name and link that connect to the section
+		 const link = document.createElement('a');
+		 // store the section name
+		 const sectionName = document.createTextNode(dataNav);
+		 // add the section name to the link
+		 link.appendChild(sectionName)
+		
+		// add style to the links
+		 link.classList.add('menu__link');
 
-    sections.forEach(section => {
+		 // create list item to store each link
+		 const li = document.createElement('li');
 
-        const sectionID = section.id;
-        const sectionDataNav = section.dataset.nav;
+		 // append each link to the list item
+		 li.appendChild(link);
 
-        navList += `<li><a class="menu__link" href="#${sectionID}">${sectionDataNav}</a></li>`;
+		 // append the list item to the navigation bar
+		 navbar.appendChild(li);
 
-    });
-    navigation.innerHTML = navList;
-};
 
-navBar();
+		 // store section id to connect it with the link referance
+		const sectionId = section.getAttribute("id");
+		link.setAttribute("href", `#${sectionId}`);
+
+
+
+
+		// scroll smoothly to the target section 
+		link.onclick = function(event){
+			event.preventDefault();
+			section.scrollIntoView({behavior: "smooth"});
+		}
+	})
+
+	console.log(navbar)
+}
+
 
 // Add class 'active' to section when near top of viewport
+
+// event to highlight the active section
+window.onscroll = function(){
+    
+    sections.forEach(section => {
+        if(window.scrollY >= section.offsetTop - 200) {
+            // console.log(window.scrollY, s.id, s.offsetTop)
+            // remove your-active-class from out of view sections
+            document.querySelector('.your-active-class').classList.remove('your-active-class');
+            // add your-active-class on the current section
+            section.classList.add('your-active-class');
+        }
+    });
+
+}
 
 
 // Scroll to anchor ID using scrollTO event
@@ -65,7 +110,7 @@ navBar();
 */
 
 // Build menu 
-
+createNavItems();
 // Scroll to section on link click
 
 // Set sections as active
